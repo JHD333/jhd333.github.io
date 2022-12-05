@@ -43,6 +43,14 @@ function fixJson(jsonData) {
       return [dataFinal, errorTxt];
   }
 
+  console.log(arrayPartConstruct);
+
+  // Check if "PartiallyConstructedPieces" array is empty
+  if (arrayPartConstruct.length == 0) {
+    errorTxt = "There are no partially constructed objects in your <u>BaseData.json</u> file.";
+    return [dataFinal, errorTxt];
+  }
+
   // Re-write "ConstructionCompleted" value to true
   try {
     for(let i = 0 ; i < arrayPartConstruct.length; i++) {
