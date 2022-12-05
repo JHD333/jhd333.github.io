@@ -16,29 +16,29 @@ function execute() {
 
   try {
     log("Fixing file ...", "blue");
-    let [fixedText, status] = fixJson(jsoned);
-    if (status) {
-      log("There was an error. See console for details.", "red");
+    let [fixedText, error] = fixJson(jsoned);
+    if (error) {
+      log(error, "red");
       return;
     }
     outputText.value = fixedText;
-    log("Successfully altered file, now copy-paste this text inside your <u>BaseData.json</u> and restart the server.", "green");
+    log("Successfully altered the provided data. Please copy-paste the text below inside your <u>BaseData.json</u> and restart the server.", "green");
   } catch (error) {
     log("Please enter valid JSON data.", "red");
   }
 }
 
 function fixJson(jsonData) {
-  let arrayPartConstruct = {}, arrayCompletedBase = {}, arrayFull = {}, dataFinal, status = 0;
+  let arrayPartConstruct = {}, arrayCompletedBase = {}, arrayFull = {}, dataFinal, errorTxt;
 
   // Read "PartiallyConstructedPieces" array
   try {
     arrayPartConstruct = jsonData["PartiallyConstructedPieces"];
     arrayCompletedBase = jsonData["CompletedBasePieceHistory"];
   } catch(error) {
-      status = 1;
+      errorTxt = "There was an issue with the provided data. Please make sure you are using data from a valid <u>BaseData.json</u> file.";
       console.error(`Full error is : ${error}`);
-      return [dataFinal, status];
+      return [dataFinal, errorTxt];
   }
 
   // Re-write "ConstructionCompleted" value to true
@@ -47,9 +47,9 @@ function fixJson(jsonData) {
       arrayPartConstruct[i].ConstructionCompleted = true;
     }
   } catch (error) {
-    status = 1;
+    errorTxt = "There was an issue with the provided data. Please make sure you are using data from a valid <u>BaseData.json</u> file.";
     console.error(`Full error is : ${error}`);
-    return [dataFinal, status];
+    return [dataFinal, errorTxt];
   }
 
   // Amend “CompletedBasePieceHistory” array with data from “PartiallyConstructedPieces” array
@@ -58,9 +58,9 @@ function fixJson(jsonData) {
       arrayCompletedBase.push(arrayPartConstruct[i]);
     }
   } catch(error) {
-    status = 1;
+    errorTxt = "There was an unexpected error. Please review the console log for more details.";
     console.error(`Full error is : ${error}`);
-    return [dataFinal, status];
+    return [dataFinal, errorTxt];
   }
 
   // Construct new array
@@ -68,20 +68,20 @@ function fixJson(jsonData) {
     arrayFull["PartiallyConstructedPieces"] = [];
     arrayFull["CompletedBasePieceHistory"] = arrayCompletedBase;
   } catch (error) {
-    status = 1;
+    errorTxt = "There was an unexpected error. Please review the console log for more details.";
     console.error(`Full error is : ${error}`);
-    return [dataFinal, status];
+    return [dataFinal, errorTxt];
   }
 
   try {
     dataFinal = JSON.stringify(arrayFull);
   } catch(error) {
-    status = 1;
+    errorTxt = "There was an unexpected error. Please review the console log for more details.";
     console.error(`Full error is : ${error}`);
-    return [dataFinal, status];
+    return [dataFinal, errorTxt];
   }
 
-  return [dataFinal, status];
+  return [dataFinal, errorTxt];
 }
 
 function log(text, color) {
