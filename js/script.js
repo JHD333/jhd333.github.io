@@ -26,7 +26,6 @@ function execute() {
     log("Successfully altered the provided data. Please copy-paste the text below inside your <u>BaseData.json</u> and restart the server.", "green");
   } catch (error) {
     log(error, "red");
-    console.error(`Full error is : ${error}`);
     return;
   }
 }
@@ -38,9 +37,9 @@ function fixJson(jsonData) {
   try {
     arrayPartConstruct = jsonData["PartiallyConstructedPieces"];
     arrayCompletedBase = jsonData["CompletedBasePieceHistory"];
-  } catch(error) {
+  } catch(errorFull) {
       errorTxt = "There was an issue with the provided data. Please make sure you are using data from a valid <u>BaseData.json</u> file.";
-      console.error(`Full error is : ${error}`);
+      console.error(`Full error is : ${errorFull}`);
       return [dataFinal, errorTxt];
   }
 
@@ -49,9 +48,9 @@ function fixJson(jsonData) {
     for(let i = 0 ; i < arrayPartConstruct.length; i++) {
       arrayPartConstruct[i].ConstructionCompleted = true;
     }
-  } catch (error) {
+  } catch (errorFull) {
     errorTxt = "There was an issue with the provided data. Please make sure you are using data from a valid <u>BaseData.json</u> file.";
-    console.error(`Full error is : ${error}`);
+    console.error(`Full error is : ${errorFull}`);
     return [dataFinal, errorTxt];
   }
 
@@ -60,9 +59,9 @@ function fixJson(jsonData) {
     for(let i = 0 ; i < arrayPartConstruct.length; i++) {
       arrayCompletedBase.push(arrayPartConstruct[i]);
     }
-  } catch(error) {
+  } catch(errorFull) {
     errorTxt = "There was an unexpected error. Please review the console log for more details.";
-    console.error(`Full error is : ${error}`);
+    console.error(`Full error is : ${errorFull}`);
     return [dataFinal, errorTxt];
   }
 
@@ -70,17 +69,17 @@ function fixJson(jsonData) {
   try {
     arrayFull["PartiallyConstructedPieces"] = [];
     arrayFull["CompletedBasePieceHistory"] = arrayCompletedBase;
-  } catch (error) {
+  } catch (errorFull) {
     errorTxt = "There was an unexpected error. Please review the console log for more details.";
-    console.error(`Full error is : ${error}`);
+    console.error(`Full error is : ${errorFull}`);
     return [dataFinal, errorTxt];
   }
 
   try {
     dataFinal = JSON.stringify(arrayFull);
-  } catch(error) {
+  } catch(errorFull) {
     errorTxt = "There was an unexpected error. Please review the console log for more details.";
-    console.error(`Full error is : ${error}`);
+    console.error(`Full error is : ${errorFull}`);
     return [dataFinal, errorTxt];
   }
 
