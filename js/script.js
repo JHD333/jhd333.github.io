@@ -12,19 +12,22 @@ function execute() {
     jsoned = JSON.parse(inputText.value);
   } catch (error) {
     log("Please enter valid JSON data.", "red");
+    console.error(`Full error is : ${error}`);
+    return;
   }
 
   try {
     log("Fixing file ...", "blue");
     let [fixedText, error] = fixJson(jsoned);
     if (error) {
-      log(error, "red");
-      return;
+        throw error;
     }
     outputText.value = fixedText;
     log("Successfully altered the provided data. Please copy-paste the text below inside your <u>BaseData.json</u> and restart the server.", "green");
   } catch (error) {
-    log("Please enter valid JSON data.", "red");
+    log(error, "red");
+    console.error(`Full error is : ${error}`);
+    return;
   }
 }
 
